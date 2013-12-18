@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+exe = ENV['HOME'] + "/.wine/drive_c/Program Files/MT5 ActivTrades/terminal.exe"
+
+fork do
+  Dir.chdir '/'
+  Process.setsid
+  puts "[#{$$}] Launching #{exe}"
+  $stdin.reopen '/dev/null'
+  $stdout.reopen '/dev/null'
+  $stderr.reopen '/dev/null'
+  exec("wine", exe)
+end
