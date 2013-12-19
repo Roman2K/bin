@@ -3,7 +3,7 @@
 exe = ENV['HOME'] + "/.wine/drive_c/Program Files/MT5 ActivTrades/terminal.exe"
 
 unless File.executable? exe
-	raise "MT5 not installed (expected at #{exe})"
+  raise "MT5 not installed (expected at #{exe})"
 end
 
 fork do
