@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+die() {
+  echo "$@" >&2
+  exit 1
+}
+
+[ ${#@} -ge 1 ] || die "usage: $0 <dir> [<version>]"
+
+dir=$1
+v=$2
+[[ "$v" ]] || {
+  dir_basename=$(basename "$dir")
+  v=${dir_basename#ruby-}
+}
+
+echo -n "Install $v? [Y/n] "
+read reply
+[ "$reply" != "n" ] || exit 0
+
+openssl_prefix() {
+  brew --prefix openssl
+}
+
+openssl_prefix || die "Homebrew package 'openssl' not installed"
+
+(cd "$dir" \
+  && ./configure \
+    --disable-install-doc \
+    --prefix=$HOME/.rbenv/versions/$v \
+    --with-opt-dir=$(openssl_prefix) \
+  && make install -j8)

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+guard_pids() {
+  ps ax | egrep ' guard (master|worker)' | while read pid _; do
+    echo $pid
+  done
+}
+
+kill_guard() {
+  pids=$(guard_pids)
+  [[ "$pids" ]] || {
+    echo ".. none to kill"
+    return 0
+  }
+  echo ".. killing $(echo "$pids" | wc -l) processes"
+  kill -9 $pids
+}
+
+check_all_killed() {
+  remaining=$(guard_pids | wc -l)
+  [ $remaining = 0 ] && {
+    echo ".. all killed"
+    return 0
+  }
+  echo "!! remaining: $remaining"
+  return 1
+}
+
+kill_guard && check_all_killed && {
+  echo ">> done"
+}
