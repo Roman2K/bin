@@ -3,6 +3,10 @@
 exec sudo find -x "$@" \
   -not -path '/Volumes/*' \
   -not -path '/private/var/db/BootCaches/*' \
+  -not -path '/private/var/db/receipts/*' \
+  -not -path '/Library/Logs/DiagnosticReports/*' \
+  -not -path '/Library/Caches/*' \
+  -not -path '/private/var/folders/*' \
   -not -path "$HOME"'/.Trash/*' \
   -not -path "$HOME"'/.npm/*' \
   -not -path "$HOME"'/Library/Caches/*' \
