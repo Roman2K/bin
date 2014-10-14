@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'uri'
+
+ARGV.size >= 2 or raise "Expected 2 arguments. Use via GIT_PROXY_COMMAND."
+
+host, port, = ARGV
+proxy = URI(ENV.fetch('http_proxy'))
+
+exec "socat", "-", "PROXY:#{proxy.host}:#{host}:#{port},proxyport=#{proxy.port}"
