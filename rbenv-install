@@ -10,11 +10,11 @@ die() {
 dir=$1
 v=$2
 [[ "$v" ]] || {
-  dir_basename=$(basename "$dir")
+  dir_basename=$(ruby -rpathname -e "puts Pathname(ARGV[0]).expand_path.basename" "$dir")
   v=${dir_basename#ruby-}
 }
 
-echo -n "Install $v? [Y/n] "
+echo -n "Install v$v? [Y/n] "
 read reply
 [ "$reply" != "n" ] || exit 0
 
