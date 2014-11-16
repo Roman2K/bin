@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-while ! rsync -av --progress --partial "$@"
-do
+while ! rsync -av --progress --partial "$@"; do
   sleep 2
 done
 
