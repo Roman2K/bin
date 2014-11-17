@@ -2,7 +2,7 @@
 
 size=1024 # MB
 mount_point=$HOME/tmp
-name="RAM FS"
+name=$(basename "$mount_point")
 
 usage() {
   echo "usage: $(basename "$0") [mount | umount | orphan] (default: mount)" >&2
@@ -28,9 +28,10 @@ mount_tmp_mount() {
 
   sectors=$(( $size * 1024 * 1024 / 512 ))
   dev=$(hdiutil attach -nomount ram://$sectors) \
-    && newfs_hfs $dev \
+    && newfs_hfs -v "$name" $dev \
     && mount -t hfs -o nobrowse $dev "$mount_point" \
-    && echo "Mounted $size MB at $mount_point"
+    && echo "Hello, world!" > "$mount_point"/hello_world \
+    && echo "Mounted $name ($size MB) at $mount_point"
 }
 
 mount_tmp_umount() {
