@@ -4,6 +4,11 @@ size=1024 # MB
 mount_point=$HOME/tmp
 name="RAM FS"
 
+usage() {
+  echo "usage: $(basename "$0") [mount | umount | orphan] (default: mount)" >&2
+  exit 1
+}
+
 process_argv() {
   [ $# -ge 0 -a $# -le 1 ] || usage
   case "$1" in
@@ -13,11 +18,6 @@ process_argv() {
     "orphan") mount_tmp_orphan ;;
     *)        usage ;;
   esac
-}
-
-usage() {
-  echo "usage: $0 [mount | umount | orphan]" >&2
-  exit 1
 }
 
 mount_tmp_mount() {
