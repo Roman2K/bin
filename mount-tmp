@@ -48,6 +48,7 @@ cmd_remount() {
 
 cmd_orphan() {
   hdiutil info | egrep 'image-path\s+: ram://' -A14 | egrep '^/dev/disk\d+\s*$'
+  return 0
 }
 
 is_mounted() {
