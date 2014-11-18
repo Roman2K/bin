@@ -5,23 +5,24 @@ mount_point=$HOME/tmp
 name=$(basename "$mount_point")
 
 usage() {
-  echo "usage: $(basename "$0") [mount | umount | orphan] (default: mount)" >&2
+  echo "usage: $(basename "$0") [mount | umount | remount | orphan] (default: mount)" >&2
   exit 1
 }
 
 process_argv() {
   [ $# -ge 0 -a $# -le 1 ] || usage
   case "$1" in
-    "")       mount_tmp_mount ;;
-    "mount")  mount_tmp_mount ;;
-    "umount") mount_tmp_umount ;;
-    "orphan") mount_tmp_orphan ;;
-    *)        usage ;;
+    "")         cmd_mount ;;
+    "mount")    cmd_mount ;;
+    "umount")   cmd_umount ;;
+    "remount")  cmd_remount ;;
+    "orphan")   cmd_orphan ;;
+    *)          usage ;;
   esac
 }
 
-mount_tmp_mount() {
-  if mount | grep -q " on $mount_point "; then
+cmd_mount() {
+  if is_mounted; then
     echo "Already mounted at $mount_point" >&2
     return 1
   fi
@@ -34,14 +35,23 @@ mount_tmp_mount() {
     && echo "Mounted $name ($size MB) at $mount_point"
 }
 
-mount_tmp_umount() {
+cmd_umount() {
   dev=$(df "$mount_point" | tail -1 | awk '{ print $1 }')
   [ $dev ] || return 1
   umount "$mount_point" && hdiutil detach "$dev"
 }
 
-mount_tmp_orphan() {
+cmd_remount() {
+  if is_mounted; then cmd_umount else true; fi \
+    && cmd_mount
+}
+
+cmd_orphan() {
   hdiutil info | egrep 'image-path\s+: ram://' -A14 | egrep '^/dev/disk\d+\s*$'
+}
+
+is_mounted() {
+  mount | grep -q " on $mount_point "
 }
 
 process_argv "$@"
