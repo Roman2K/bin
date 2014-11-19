@@ -5,20 +5,25 @@ mount_point=$HOME/tmp
 name=$(basename "$mount_point")
 
 usage() {
-  echo "usage: $(basename "$0") [mount | umount | remount | orphan] (default: mount)" >&2
-  exit 1
+  echo "usage: $(basename "$0") [mount | umount | remount | check | orphan]" \
+    "(default: mount)" >&2
 }
 
 process_argv() {
-  [ $# -ge 0 -a $# -le 1 ] || usage
+  [ $# -ge 0 -a $# -le 1 ] || { usage; exit 1; }
   case "$1" in
     "")         cmd_mount ;;
     "mount")    cmd_mount ;;
     "umount")   cmd_umount ;;
     "remount")  cmd_remount ;;
+    "check")    cmd_check ;;
     "orphan")   cmd_orphan ;;
     *)          usage ;;
   esac
+}
+
+cmd_check() {
+  is_mounted
 }
 
 cmd_mount() {
