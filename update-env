@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+CODE="$HOME/code"
+PROJECTS="
+  dotfiles
+  bin
+"
+
+for n in dotfiles bin; do
+  (box $n && cd "$CODE/$n" && git pull --rebase) \
+    || exit 1
+done
