@@ -4,9 +4,10 @@ CODE="$HOME/code"
 PROJECTS="
   dotfiles
   bin
+  services
 "
 
-for n in dotfiles bin; do
+for n in $PROJECTS; do
   (box $n && cd "$CODE/$n" && git pull --rebase) \
     || exit 1
 done
