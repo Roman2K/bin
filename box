@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-
-ARGV.size == 1 or raise ArgumentError, "usage: #{File.basename $0} <message>"
-message = ARGV.first
-
-horizontal_border = '+' << '-' * (message.size + 2) << '+'
-puts horizontal_border
-puts '| ' << message << ' |'
-puts horizontal_border

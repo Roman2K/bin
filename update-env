@@ -7,7 +7,11 @@ PROJECTS="
   services
 "
 
+UNDERLINE=$(tput smul)
+NO_UNDERLINE=$(tput rmul)
+
 for n in $PROJECTS; do
-  (box $n && cd "$CODE/$n" && git pull --rebase) \
+  echo -e "\n${UNDERLINE}$n${NO_UNDERLINE}" \
+    && (cd "$CODE/$n" && git pull --rebase) \
     || exit 1
 done
