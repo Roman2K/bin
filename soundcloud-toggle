@@ -11,5 +11,5 @@ line = `chrome-cli list links`.split("\n").find { |l| l =~ /\bsoundcloud\.com\//
 tab_id = line[/:(\d+)/, 1] or raise "Unexpected lined format: %p" % line
 
 exec "chrome-cli", "execute",
-  "document.querySelector('.heroPlayButton').dispatchEvent(new Event('click'))",
+  "document.querySelector('.playControl').dispatchEvent(new Event('click'))",
   "-t", tab_id
