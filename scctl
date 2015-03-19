@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+action = ARGV[0]
+
 def die(message)
   $stderr.puts message
   exit 1
@@ -10,6 +12,14 @@ line = `chrome-cli list links`.split("\n").find { |l| l =~ /\bsoundcloud\.com\//
 
 tab_id = line[/:(\d+)/, 1] or raise "Unexpected lined format: %p" % line
 
+button_selector = case action
+  when 'toggle'   then '.playControl'
+  when 'next'     then '.skipControl__next'
+  when 'previous' then '.skipControl__previous'
+  else
+    die "Unhandled action: %p" % action
+end
+
 exec "chrome-cli", "execute",
-  "document.querySelector('.playControl').dispatchEvent(new Event('click'))",
+  "document.querySelector('#{button_selector}').dispatchEvent(new Event('click'))",
   "-t", tab_id
