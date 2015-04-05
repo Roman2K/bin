@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+diskutil mount /dev/disk2s2 \
+  && open /Volumes/WD6/roman/_.dmg \
+  && while ! [ -d /Volumes/_ ]; do sleep 0.5; done \
+  && exec open /Volumes/_
