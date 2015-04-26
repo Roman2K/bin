@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+exec date +%Y%m%d

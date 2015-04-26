@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+diskutil mount /dev/disk2s2 \
+  && exec open /Volumes/WD6

@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+size = !!ARGV.delete('-s')
+
+cmd = %w(find) + ARGV + %w(
+  -type f -size 50M
+  -name *.mkv -o -iname *.mp4 -a -iname *sample*
+)
+
+exec(*cmd) if !size
+
+print0 = !!cmd.delete('-print0')
+eol = print0 ? "\0" : "\n"
+
+IO.popen(cmd, 'r') do |p|
+  p.each_line do |path|
+    path.chomp!
+    printf "%2dm\t%s" % [File.size(path) / 1024 / 1024, path]
+    print eol
+  end
+end
+
+exit $?.exitstatus
