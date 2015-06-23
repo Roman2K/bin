@@ -1,6 +1,24 @@
 #!/usr/bin/env bash
 
-diskutil mount /dev/disk2s2 \
-  && open /Volumes/WD6/roman/_.dmg \
-  && while ! [ -d /Volumes/_ ]; do sleep 0.5; done \
-  && exec open /Volumes/_
+progname=$(basename "$0")
+
+terminal-notifier -title "$progname" -message "Mounting..."
+
+do_mnt() {
+  diskutil mount /dev/disk2s2 \
+    && open /Volumes/WD6/roman/_.dmg
+}
+
+do_open() {
+  while ! [ -d /Volumes/_ ]; do sleep 0.5; done \
+    && open /Volumes/_
+}
+
+err=$(do_mnt 2>&1)
+
+if [ $? = 0 ]; then
+  terminal-notifier -title "$progname" -message "Opening..."
+  exec do_open
+else
+  terminal-notifier -title "$progname" -message "$err"
+fi

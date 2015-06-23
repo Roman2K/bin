@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
 
-diskutil mount /dev/disk2s2 \
-  && exec open /Volumes/WD6
+progname=$(basename "$0")
+
+terminal-notifier -title "$progname" -message "Mounting..."
+
+err=$(diskutil mount /dev/disk2s2 2>&1)
+
+if [ $? = 0 ]; then
+  terminal-notifier -title "$progname" -message "Opening..."
+  exec open /Volumes/WD6
+else
+  terminal-notifier -title "$progname" -message "$err"
+fi
