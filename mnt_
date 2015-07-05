@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 
 progname=$(basename "$0")
-
-terminal-notifier -title "$progname" -message "Mounting..."
+volume="_"
 
 do_mnt() {
-  diskutil mount /dev/disk2s2 \
+  mntwd6 \
     && open /Volumes/WD6/roman/_.dmg
 }
 
 do_open() {
-  while ! [ -d /Volumes/_ ]; do sleep 0.5; done \
-    && open /Volumes/_
+  while ! [ -d /Volumes/$volume ]; do sleep 0.5; done \
+    && open /Volumes/$volume
 }
 
 err=$(do_mnt 2>&1)
-
-if [ $? = 0 ]; then
-  terminal-notifier -title "$progname" -message "Opening..."
-  exec do_open
-else
+echo "$err $?"
+if [ $? != 0 ]; then
   terminal-notifier -title "$progname" -message "$err"
+  exit 1
 fi
+
+terminal-notifier -title "$progname" -message "Opening ${volume}..."
+do_open

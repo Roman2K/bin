@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
 progname=$(basename "$0")
+volume="WD6"
 
-terminal-notifier -title "$progname" -message "Mounting..."
-
-err=$(diskutil mount /dev/disk2s2 2>&1)
-
-if [ $? = 0 ]; then
-  terminal-notifier -title "$progname" -message "Opening..."
-  exec open /Volumes/WD6
-else
-  terminal-notifier -title "$progname" -message "$err"
+part=$(diskutil list | grep " $volume " | egrep -o 'disk\d\w+')
+if [ -z "$part" ]; then
+  terminal-notifier -title "$progname" -message "Couldn't find $volume"
+  exit 1
 fi
+
+terminal-notifier -title "$progname" -message "Mounting ${volume}..."
+exec diskutil mount /dev/$part
