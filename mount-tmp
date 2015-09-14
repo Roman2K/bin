@@ -32,6 +32,8 @@ cmd_mount() {
     return 1
   fi
 
+  [ -e "$mount_point" ] || mkdir "$mount_point"
+
   sectors=$(( $size * 1024 * 1024 / 512 ))
   dev=$(hdiutil attach -nomount ram://$sectors) \
     && newfs_hfs -v "$name" $dev \
