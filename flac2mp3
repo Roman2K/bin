@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+mkdir -p mp3
+for f in *.flac; do
+  ffmpeg -i "$f" -codec:a libmp3lame -q:a 2 mp3/"${f%.flac}".mp3 || break
+done
