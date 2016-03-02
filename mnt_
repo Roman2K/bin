@@ -14,7 +14,6 @@ do_open() {
 }
 
 err=$(do_mnt 2>&1)
-echo "$err $?"
 if [ $? != 0 ]; then
   terminal-notifier -title "$progname" -message "$err"
   exit 1
