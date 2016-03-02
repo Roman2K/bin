@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-cd ~/code/services \
-  && exec mg restart crissic*tunnel
