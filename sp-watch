@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-exec nodemon \
-  --exec bundle exec rspec \
-  --format progress \
-  --colour \
-  --no-profile \
-  "$@"
