@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+[ $# -ge 2 ] || { echo "usage: $0 host path [backup-dir]" >&2; exit 1; }
+
+host=$1
+path=$2
+backup_dir=${3:-/tmp}
+
+echo Copying $host:$path
+echo Backup dir: $backup_dir
+
+dir=$(basename "$path")
+backup=$backup_dir/$dir-$(date +%Y%m%d%H%M%S)
+remote_parent=$(dirname "$(pwd)/$path")
+local_parent=$(dirname "$path")
+
+if [ -e "$path" ]; then
+  if [ -e "$backup" ]; then
+    echo "backup destination already exists: $backup" >&2
+    exit 1
+  fi
+  mv "$path" "$backup" || exit 1
+else
+  echo "local $path doesn't exist, not backing up"
+fi
+
+ssh "$host" "cd '$remote_parent' > /dev/null && tar cp '$dir'" \
+  | (cd "$local_parent" > /dev/null && tar xpv)
