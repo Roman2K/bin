@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
-mkdir -p mp3
-for f in *.flac; do
-  ffmpeg -i "$f" -codec:a libmp3lame -q:a 2 mp3/"${f%.flac}".mp3 || break
+[ $# = 1 ] || {
+  echo "Usage: $(basename "$0") <ext>" >&2
+  exit 2
+}
+
+ext=$1
+dest="mp3"
+
+echo "Converting *.$ext" to MP3
+
+mkdir -p "$dest"
+for f in *.$ext; do
+  ffmpeg -i "$f" -codec:a libmp3lame -q:a 2 "$dest"/"${f%.$ext}".mp3 || break
 done
