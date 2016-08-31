@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'find'
+
+OK          = /\.(mp3|m4a)$/i
+TO_DELETE   = /(\.DS_Store|\.jpg|\.m3u|\.nfo|\.sfv|\.db)$/i
+TO_CONVERT  = /\.(m4q|ogg|opus)$/i
+
+def convert(f)
+  print "converting %s: " % short(f)
+  dest = f.sub(/\.\w+$/, "") + ".mp3"
+  if File.exist?(dest)
+    backup = dest + ".backup"
+    if File.exist? backup
+      puts color("31", "dest exists, can't create backup")
+      return
+    end
+    FileUtils.mv(dest, backup)
+  end
+  if !to_mp3(f, dest)
+    puts color("31", "ffmpeg failed")
+    return
+  end
+  system("trash", f)
+  puts color("32", "OK")
+end
+
+def delete(f)
+  print "deleting %s: " % short(f)
+  system("trash", f)
+  puts color("32", "OK")
+end
+
+def to_mp3(f, dest)
+  system "ffmpeg", "-y",
+    "-i", f,
+    "-codec:a", "libmp3lame", "-q:a", "2",
+    dest,
+    out: '/dev/null', err: '/dev/null'
+end
+
+def short(s)
+  max = 40
+  if s.length <= max
+    return s
+  end
+  "…" + s[-(max-1)..-1]
+end
+
+def color(color, s)
+  "\033[#{color}m#{s}\033[0m"
+end
+
+Find.find "." do |f|
+  next unless File.file? f
+  case f
+  when OK
+  when TO_DELETE
+    delete f
+  when TO_CONVERT
+    convert f
+  else
+    puts "Unknown ext: %s" % f.sub(/\.\w+$/) { color("31", $&) }
+  end
+end
