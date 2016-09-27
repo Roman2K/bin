@@ -17,4 +17,6 @@ exec sudo find -x "$@" \
   -not -path "$HOME"'/Library/Logs/CrashReporter/*' \
   -not -path "$HOME"'/Library/Preferences/Macromedia/Flash Player/*' \
   -not -path "$HOME"'/Library/Preferences/Macromedia/Flash Player/macromedia.com/support/flashplayer/sys/*' \
-  -not -path "$HOME"'/Library/Safari/LocalStorage/*'
+  -not -path "$HOME"'/Library/Safari/LocalStorage/*' \
+  -not -path "$HOME"'/Library/Application Support/com.apple.sharedfilelist/*' \
+  -not -path "$HOME"'/Library/Cookies/*'
