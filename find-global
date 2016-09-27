@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-exec sudo find -x "$@" \
+exec find -x "$@" \
   -not -path '/Volumes/*' \
   -not -path '/private/var/db/BootCaches/*' \
   -not -path '/private/var/db/receipts/*' \
