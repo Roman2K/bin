@@ -11,6 +11,7 @@ dir=$1
 v=$2
 [[ "$v" ]] || {
   dir_basename=$(ruby -rpathname -e "puts Pathname(ARGV[0]).expand_path.basename" "$dir")
+  [ $? = 0 ] || die "failed to determine basename: ruby not installed?"
   v=${dir_basename#ruby-}
 }
 
@@ -22,11 +23,18 @@ openssl_prefix() {
   brew --prefix openssl
 }
 
-openssl_prefix || die "Homebrew package 'openssl' not installed"
+readline_prefix() {
+  brew --prefix readline
+}
+
+for n in openssl readline; do
+  ${n}_prefix || die "Homebrew package '$n' not installed"
+done
 
 (cd "$dir" \
   && ./configure \
     --disable-install-doc \
     --prefix=$HOME/.rbenv/versions/$v \
-    --with-opt-dir=$(openssl_prefix) \
+    --with-openssl-dir=$(openssl_prefix) \
+    --with-readline-dir=$(readline_prefix) \
   && make install -j8)
