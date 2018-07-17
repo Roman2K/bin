@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+size=1g
+mount_point=$HOME/tmp
+name=$(basename "$mount_point")
+
+usage() {
+  echo "usage: $(basename "$0") [mount | check] (default: mount)" >&2
+}
+
+process_argv() {
+  [ $# -ge 0 -a $# -le 1 ] || { usage; exit 1; }
+  case "$1" in
+    "")         cmd_mount ;;
+    "mount")    cmd_mount ;;
+    "check")    cmd_check ;;
+    *)          usage ;;
+  esac
+}
+
+cmd_check() {
+  is_mounted
+}
+
+cmd_mount() {
+  if is_mounted; then
+    echo "Already mounted at $mount_point" >&2
+    return 1
+  fi
+
+  [ -e "$mount_point" ] || mkdir "$mount_point"
+
+  sudo mount -t tmpfs -o size=$size none "$mount_point" \
+    && echo "Hello, world!" > "$mount_point"/hello_world \
+    && echo "Mounted $name ($size) at $mount_point"
+}
+
+is_mounted() {
+  mount | grep -q " on $mount_point "
+}
+
+process_argv "$@"
