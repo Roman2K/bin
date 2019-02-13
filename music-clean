@@ -5,7 +5,7 @@ require 'find'
 
 OK          = /\.(mp3|m4a)$/i
 TO_DELETE   = /(\.DS_Store|\.jpg|\.m3u|\.nfo|\.sfv|\.db)$/i
-TO_CONVERT  = /\.(m4q|ogg|opus)$/i
+TO_CONVERT  = /\.(m4q|ogg|opus|wav)$/i
 
 def convert(f)
   print "converting %s: " % short(f)
