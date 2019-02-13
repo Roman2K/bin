@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cmd=gpg2
+command -v "$cmd" >/dev/null \
+  || cmd=gpg
+
+echo "running $cmd" >&2
+
+exec "$cmd" "$@"
