@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-d="$HOME/opt/gist"
-
-exec ruby -I "$d"/lib "$d"/bin/gist "$@"
