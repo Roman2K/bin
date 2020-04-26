@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+def mosh_servers_pids
+  `who`.
+    tap { $?.success? or raise "`who` failed" }.
+    scan(/mosh \[(\d+)\]/).
+    flatten.
+    map &:to_i
+end
+
+def tmux_ancestors_pids
+  pid = `tmux display -p '\#{client_pid}'`.
+    tap { $?.success? or raise "failed to get tmux client PID" }.
+    to_i
+  [].tap do |parents|
+    loop do
+      pid = `ps -o ppid= #{pid}`.to_i
+      break if pid == 0
+      parents << pid
+    end
+  end
+end
+
+pp \
+  ancestors: ancestors = tmux_ancestors_pids,
+  mosh_servers: mosh_servers = mosh_servers_pids,
+  to_kill: to_kill = mosh_servers - ancestors
+
+Process.kill :TERM, *to_kill unless to_kill.empty?
